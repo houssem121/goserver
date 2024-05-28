@@ -1,0 +1,228 @@
+// Alice Generate Alice key-pair
+	aPriKey, aPubKey, _ := curve.GenerateKeys()
+	// Bob Generate Bob key-pair
+	bPriKey, bPubKey, _ := curve.GenerateKeys()
+	// plain text
+	m := "Hello, Proxy Re-Encrcryptiontotooooo"
+	fmt.Println("origin message:", m)
+	// Alice encrypts to get cipherText and capsule
+	cipherText, capsule, err := recrypt.Encrypt(m, aPubKey)
+	if err != nil {
+		fmt.Println(err)
+	}
+	capsuleAsBytes, err := recrypt.EncodeCapsule(*capsule)
+	if err != nil {
+		fmt.Println("encode error:", err)
+	}
+	capsuleTest, err := recrypt.DecodeCapsule(capsuleAsBytes)
+	if err != nil {
+		fmt.Println("decode error:", err)
+	}
+	fmt.Println("capsule before encode:", capsule)
+	fmt.Println("capsule after decode:", capsuleTest)
+	fmt.Println("ciphereText:", cipherText)
+	// Test recreate aes key
+	keyBytes, err := recrypt.RecreateAESKeyByMyPriKey(capsule, aPriKey)
+	if err != nil {
+		fmt.Println("Recreate key error:", err)
+	}
+	fmt.Println("recreate key:", hex.EncodeToString(keyBytes))
+	// Alice generates re-encryption key
+	rk, pubX, err := recrypt.ReKeyGen(aPriKey, bPubKey)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println("rk:", rk)
+	// Server executes re-encrypt
+	newCapsule, err := recrypt.ReEncryption(rk, capsule)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	// Bob decrypts the cipherText
+	plainText, err := recrypt.Decrypt(bPriKey, newCapsule, pubX, cipherText)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	plainTextByMyPri, err := recrypt.DecryptOnMyPriKey(aPriKey, capsule, cipherText)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println("PlainText by my own private key:", string(plainTextByMyPri))
+	// get plainText
+	fmt.Println("plainText:", string(plainText))
+
+
+
+
+
+
+
+
+
+
+
+
+
+            fmt.Println("this is the encrypted public key", encryptedPubKey)
+			fmt.Println("this is the encrypted private key", encryptedPriKey)
+			decryptPubKey, _ := decrypt(encryptedPubKey, symKey)
+			decryptPriKey, _ := decrypt(encryptedPriKey, symKey)
+			parsedPubKey, _ := x509.ParsePKIXPublicKey(decryptPubKey)
+			parsedPriKey, _ := x509.ParsePKCS8PrivateKey(decryptPriKey)
+
+			fmt.Println("this is the decrypted public key", parsedPubKey)
+			fmt.Println("this is the decrypted private key", parsedPriKey)
+
+			m := "Hello, Proxy Re-Encryption"
+			fmt.Println("origin message:", m)
+			// Alice encrypts to get cipherText and capsule
+			cipherText, capsule, errss := recrypt.Encrypt(m, aPubKey)
+			if err != nil {
+				fmt.Println(errss)
+			}
+			priKeys, ok := parsedPriKey.(*ecdsa.PrivateKey)
+			if !ok {
+				fmt.Println("Failed to cast private key")
+			}
+			plainTextByMyPri, errs := recrypt.DecryptOnMyPriKey(priKeys, capsule, cipherText)
+			if err != nil {
+				fmt.Println(errs)
+			}
+			fmt.Println("PlainText by my own private key:", string(plainTextByMyPri))
+			// get plainText
+
+			fmt.Println("this is the original public key", aPubKey)
+			fmt.Println("this is the original private key", aPriKey)
+			// Store the key pair in the database (modify the table name if needed)
+		
+
+
+
+
+	var encryptedPubKeys, encryptedPriKeys []byte
+
+			aPriKey, aPubKey, _ := curve.GenerateKeys()
+			derBytes, _ := x509.MarshalPKIXPublicKey(aPubKey)
+			derBytess, _ := x509.MarshalPKCS8PrivateKey(aPriKey)
+			encryptedPubKey, _ := encrypt(derBytes, symKey)
+			encryptedPriKey, _ := encrypt(derBytess, symKey)
+			publicKey = fmt.Sprintf("%v", encryptedPubKey) // Convert bytes to string
+			privateKey = fmt.Sprintf("%v", encryptedPriKey)
+			encryptedPubKeys = []byte(publicKey)
+			encryptedPriKeys = []byte(privateKey)
+
+			decryptPubKey, _ := decrypt(encryptedPubKeys, symKey)
+			decryptPriKey, _ := decrypt(encryptedPriKeys, symKey)
+			fmt.Println("this is the decrypted public key", decryptPubKey)
+			fmt.Println("this is the decrypted private key", decryptPriKey)
+			parsedPubKey, _ := x509.ParsePKIXPublicKey(decryptPubKey)
+			parsedPriKey, _ := x509.ParsePKCS8PrivateKey(decryptPriKey)
+
+			fmt.Println("this is the decrypted public key", parsedPubKey)
+			fmt.Println("this is the decrypted private key", parsedPriKey)
+			_, err := db.Exec("INSERT INTO patiens (blockchain_address, pub_key, priv_key) VALUES (?, ?, ?)", blockchainAddress, publicKey, privateKey)
+			if err != nil {
+				http.Error(w, "Failed to store key pair in database", http.StatusInternalServerError)
+				return
+			}
+
+
+
+
+
+
+
+
+
+
+			var publicKeyss, privateKeyss string
+			aPriKey, aPubKey, _ := curve.GenerateKeys()
+			derBytes, _ := x509.MarshalPKIXPublicKey(aPubKey)
+			derBytess, _ := x509.MarshalPKCS8PrivateKey(aPriKey)
+			//how to import this funuction  encrypt from models
+			encryptedPubKey, _ := keygenD.Encrypt(derBytes, symKey)
+			encryptedPriKey, _ := keygenD.Encrypt(derBytess, symKey)
+			fmt.Println("this is the encrypted public key", encryptedPubKey)
+			fmt.Println("this is the encrypted private key", encryptedPriKey)
+			publicKeyss = fmt.Sprintf("%v", encryptedPubKey) // Convert bytes to string
+			privateKeyss = fmt.Sprintf("%v", encryptedPriKey)
+			byteSlices, _ := parseByteString(publicKeyss)
+			byteSlicess, _ := parseByteString(privateKeyss)
+
+			decryptPubKey, _ := keygenD.Decrypt(byteSlices, symKey)
+			decryptPriKey, _ := keygenD.Decrypt(byteSlicess, symKey)
+			parsedPubKey, _ := x509.ParsePKIXPublicKey(decryptPubKey)
+			parsedPriKey, _ := x509.ParsePKCS8PrivateKey(decryptPriKey)
+
+			fmt.Println("this is the decrypted public key", parsedPubKey)
+			fmt.Println("this is the decrypted private key", parsedPriKey)
+
+			m := "Hello, Proxy Re-Encryption"
+			fmt.Println("origin message:", m)
+			// Alice encrypts to get cipherText and capsule
+			cipherText, capsule, errss := recrypt.Encrypt(m, aPubKey)
+			if err != nil {
+				fmt.Println(errss)
+			}
+			publicKeys, ok := parsedPubKey.(*ecdsa.PublicKey)
+			if !ok {
+				fmt.Println("Failed to cast private key")
+			}
+			priKeys, ok := parsedPriKey.(*ecdsa.PrivateKey)
+			if !ok {
+				fmt.Println("Failed to cast private key")
+			}
+			fmt.Println("this is the public key", publicKeys)
+			fmt.Println("this is the private key", priKeys)
+			plainTextByMyPri, errs := recrypt.DecryptOnMyPriKey(priKeys, capsule, cipherText)
+			if err != nil {
+				fmt.Println(errs)
+			}
+			fmt.Println("PlainText by my own private key:", string(plainTextByMyPri))
+			publicKey = fmt.Sprintf("%v", encryptedPubKey) // Convert bytes to string
+			privateKey = fmt.Sprintf("%v", encryptedPriKey)
+
+			_, err := db.Exec("INSERT INTO patiens (blockchain_address, pub_key, priv_key) VALUES (?, ?, ?)", blockchainAddress, publicKey, privateKey)
+			if err != nil {
+				http.Error(w, "Failed to store key pair in database", http.StatusInternalServerError)
+				return
+			}
+			publicKey = fmt.Sprintf("%v", aPubKey)  // Convert bytes to string
+			privateKey = fmt.Sprintf("%v", aPriKey) // Convert aPriKey to string
+
+			keys := struct {
+				PublicKey string `json:"public_key"`
+			}{
+				PublicKey: publicKey,
+			}
+
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(keys)
+		} else if err != nil {
+			http.Error(w, "Failed to query database", http.StatusInternalServerError)
+			return
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+		{"patient_address":"houssemhammamio",
+		"user_address":"doctorhmid",
+		"regenkey":{
+		   "regenkey":35206197391297303016698385263240248052030793504095123039839735571537329201048,
+		  "pubX":{
+			"Curve":{},
+		    "X":96057858391970889840176582012821109552134495572983074886181634925604332570909,
+		    "Y":82922780771276955094066385679561346726381761612413377071904945321448346655263
+			}
+		}
+		}
